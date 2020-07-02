@@ -4,7 +4,7 @@ Based on [CRAFT](https://arxiv.org/pdf/1904.01941.pdf) scene text detector\
 Translation is done using [Google Translate](https://translate.google.com/) with python package [googletrans](https://github.com/ssut/py-googletrans)
 # How to use
 You need an NVIDIA GPU no older than GTX 700 series
-1. Download `textdet_300k.pth` and `ocr_640k.pth` from release and put them into the project folder
+1. Download `textdet_300k.pth` and `ocr_640k.pth` from [release](https://github.com/PatchyVideo/MMD-Translator/releases/tag/v0.3) and put them into the project folder
 1. Install NVIDIA Driver
 1. Install CUDA 10.2
 1. Install Python3 environment
