@@ -1,0 +1,6 @@
+PIL
+networkx
+tqdm
+opencv-python
+skimage
+googletrans
