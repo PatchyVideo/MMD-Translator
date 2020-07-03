@@ -448,6 +448,7 @@ last_texts = []
 last_change_frametime = 0
 fps_last_time = None
 fps_last_frame = None
+last_frame_resized = None
 
 while cap.isOpened() :
 	ret, frame = cap.read()
@@ -460,14 +461,15 @@ while cap.isOpened() :
 
 	frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB) # RGB order
 
-	# if last_frame is not None and np.sum(np.abs(last_frame.astype(np.int32) - frame.astype(np.int32))) < frame.shape[0] * frame.shape[1] * 5 :
-	# 	# skip if frames are not changed
-	# 	counter += 1
-	# 	last_frame = frame
-	# 	continue
-
 	frame_timestamp_ms = cap.get(cv2.CAP_PROP_POS_MSEC)
 	frame_resized, target_ratio, _ = imgproc.resize_aspect_ratio(frame, args.size, cv2.INTER_AREA, mag_ratio = 1)
+	if last_frame_resized is not None and not args.verbose :
+		ssim = metrics.structural_similarity(cv2.cvtColor(last_frame_resized, cv2.COLOR_RGB2GRAY), cv2.cvtColor(frame_resized, cv2.COLOR_RGB2GRAY))
+		if ssim > 0.9 :
+			counter += 1
+			last_frame_resized = frame_resized
+			continue
+	last_frame_resized = frame_resized
 	frame_resized = cv2.bilateralFilter(frame_resized, 17, 80, 80)
 	ratio_h = ratio_w = 1 / target_ratio
 	frame_norm = imgproc.normalizeMeanVariance(frame_resized, (0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
