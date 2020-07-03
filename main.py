@@ -36,17 +36,20 @@ def copyStateDict(state_dict):
 
 parser = argparse.ArgumentParser(description='Generate text bboxes given a video file')
 parser.add_argument('--video', default='', type=str, help='video file')
+parser.add_argument('--language', default='zh-cn', type=str, help='language to translate to')
 parser.add_argument('--out', default='', type=str, help='output srt file')
+parser.add_argument('--out_translated', default='', type=str, help='output translated srt file')
 parser.add_argument('--text_threshold', default=0.51, type=float, help='text_threshold')
 parser.add_argument('--link_threshold', default=0.1, type=float, help='link_threshold')
 parser.add_argument('--low_text', default=0.5, type=float, help='low_text')
 parser.add_argument('--ssim_threshold', default=0.31, type=float, help='ssim_threshold')
 parser.add_argument('--iou_threshold', default=0.6, type=float, help='iou_threshold')
-parser.add_argument('--levenshtein_threshold', default=0.8, type=float, help='levenshtein_threshold')
-parser.add_argument('--size', default=640, type=int, help='image square size')
-parser.add_argument('--skip_frame', default=0, type=int, help='skip every k frames')
+parser.add_argument('--levenshtein_threshold', default=0.8, type=float, help='Subtitles above <levenshtein_threshold> are consider the same')
+parser.add_argument('--size', default=640, type=int, help='Video canvas size to perform recognition')
+parser.add_argument('--skip_frame', default=0, type=int, help='Skip every <skip_frame> frames')
 parser.add_argument('--verbose', default=False, action='store_true', help='Show process')
-parser.add_argument('--draw_subtitle', default=False, action='store_true', help='Draw subtitle on frames')
+parser.add_argument('--draw_subtitle', default=False, action='store_true', help='Draw subtitle on frames, requires --verbose')
+parser.add_argument('--subtitle_discard_threshold', default=200, type=int, help='Discard subtitle lasts less than <subtitle_discard_threshold> milliseconds')
 args = parser.parse_args()
 
 args.batch_size = 1
@@ -189,7 +192,7 @@ def render_frame(frame, bboxes, draw_subtitle, texts) :
 		global cached_text
 		global cached_translation
 		if cached_text != texts :
-			texts_translated = trans.translate('\n'.join(texts), dest = 'zh-cn').text.split('\n')
+			texts_translated = trans.translate('\n'.join(texts), dest = args.language).text.split('\n')
 			cached_text = texts
 			cached_translation = texts_translated
 		else :
@@ -433,11 +436,19 @@ def ms2hrs(ms) :
 	return '%02d:%02d:%02d,%03d' % (hrs, remain_minutes, remain_sec, remain_ms)
 
 def emit_srt(counter, from_time, to_time, text) :
-	with open(args.out, 'a+') as fp :
-		print(counter, file = fp)
-		print('%s --> %s' % (ms2hrs(from_time), ms2hrs(to_time)), file = fp)
-		print('\n'.join(text), file = fp)
-		print('', file = fp)
+	if args.out :
+		with open(args.out, 'a+') as fp :
+			print(counter, file = fp)
+			print('%s --> %s' % (ms2hrs(from_time), ms2hrs(to_time)), file = fp)
+			print('\n'.join(text), file = fp)
+			print('', file = fp)
+	if args.out_translated :
+		text_trans = trans.translate('\n'.join(text), dest = args.language).text.split('\n')
+		with open(args.out_translated, 'a+') as fp :
+			print(counter, file = fp)
+			print('%s --> %s' % (ms2hrs(from_time), ms2hrs(to_time)), file = fp)
+			print('\n'.join(text_trans), file = fp)
+			print('', file = fp)
 
 all_frame_bboxes = []
 counter = 0
@@ -496,7 +507,7 @@ while cap.isOpened() :
 			except :
 				changed = True
 			if changed :
-				if last_texts :
+				if last_texts and frame_timestamp_ms - last_change_frametime > args.subtitle_discard_threshold :
 					text_counter += 1
 					emit_srt(text_counter, last_change_frametime, frame_timestamp_ms, last_texts)
 				last_change_frametime = frame_timestamp_ms

@@ -15,8 +15,10 @@ You need an NVIDIA GPU no older than GTX 700 series
 1. Run `python main.py --out NUL --verbose --skip_frame 1 --video /path/to/video/file` and have fun
 # How to use in real life
 You can specifiy an output srt subtitle file of recognized texts using `--out /path/to/out/srt` parameter\
+You can specifiy an output srt subtitle file of translated texts using `--out_translated /path/to/out/srt` parameter\
 No windows will be shown if `--verbose` parameter is not given \
-`--skip_frame 1` controls how many frames to skip in-between two frames used for recognition, higher the value faster the program will run, but the resulting srt file will not be as accurate as setting this value to 0
+`--skip_frame 1` controls how many frames to skip in-between two frames used for recognition, higher the value faster the program will run, but the resulting srt file will not be as accurate as setting this value to 0 \
+Use `--language` to specifiy which language you want to translate to, list of language codes can be found [here](https://py-googletrans.readthedocs.io/en/latest/)
 # Future works
 1. The current text detector is not very accurate, new model is being trained as you are reading this
 1. Support Korean
