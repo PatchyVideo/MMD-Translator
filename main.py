@@ -468,7 +468,7 @@ while cap.isOpened() :
 
 	frame_timestamp_ms = cap.get(cv2.CAP_PROP_POS_MSEC)
 	frame_resized, target_ratio, _ = imgproc.resize_aspect_ratio(frame, args.size, cv2.INTER_AREA, mag_ratio = 1)
-	frame_resized = cv2.bilateralFilter(frame_resized, 19, 50, 50)
+	frame_resized = cv2.bilateralFilter(frame_resized, 17, 80, 80)
 	ratio_h = ratio_w = 1 / target_ratio
 	frame_norm = imgproc.normalizeMeanVariance(frame_resized, (0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
 	#frame_norm = imgproc.normalizeMeanVariance(frame_resized)
