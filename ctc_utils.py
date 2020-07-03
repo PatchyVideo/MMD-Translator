@@ -6,7 +6,7 @@ import numpy as np
 
 class CTCLabelConverter(object):
 	""" Convert between text-label and text-index """
-	SPACE_SYMBOLS = ':.\n\r[] \t\v\f{}-_=+`~!@#$%^&*();\'",<>/?\\|－＞＜。，《》【】　？！￥…（）、：；·「」『』〔〕［］｛｝｟｠〉〈〖〗〘〙〚〛゠＝‥※＊〽〓〇＂“”‘’＃＄％＆＇＋．／＠＼＾＿｀｜～｡｢｣､･ｰﾟ￠￡￢￣￤￨￩￪￫￬￭￮・◊→←↑↓↔—'
+	SPACE_SYMBOLS = ':.\n\r[] \t\v\f{}-■_=+`~!@#$%^&*();\'",<>/?\\|－＞＜。，《》【】　？！￥…（）、：；·「」『』〔〕［］｛｝｟｠〉〈〖〗〘〙〚〛゠＝‥※＊〽〓〇＂“”‘’＃＄％＆＇＋．／＠＼＾＿｀｜～｡｢｣､･ｰﾟ￠￡￢￣￤￨￩￪￫￬￭￮・◊→←↑↓↔—'
 
 	def __init__(self, character, bigram_probs = None):
 		# character (str): set of the possible characters.

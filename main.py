@@ -172,7 +172,7 @@ caption_font = ImageFont.truetype('Arial-Unicode-Regular.ttf', 20)
 cached_text = None
 cached_translation = None
 
-SPACE_SYMBOLS = ':.\n\r[] \t\v\f{}-_=+`~!@#$%^&*();\'",<>/?\\|－＞＜。，《》【】　？！￥…（）、：；·「」『』〔〕［］｛｝｟｠〉〈〖〗〘〙〚〛゠＝‥※＊〽〓〇＂“”‘’＃＄％＆＇＋．／＠＼＾＿｀｜～｡｢｣､･ｰﾟ￠￡￢￣￤￨￩￪￫￬￭￮・◊→←↑↓↔—'
+SPACE_SYMBOLS = ':.\n\r[] \t\v\f{}-_■=+`~!@#$%^&*();\'",<>/?\\|－＞＜。，《》【】　？！￥…（）、：；·「」『』〔〕［］｛｝｟｠〉〈〖〗〘〙〚〛゠＝‥※＊〽〓〇＂“”‘’＃＄％＆＇＋．／＠＼＾＿｀｜～｡｢｣､･ｰﾟ￠￡￢￣￤￨￩￪￫￬￭￮・◊→←↑↓↔—'
 
 def render_frame(frame, bboxes, draw_subtitle, texts) :
 	for bbox in bboxes :
