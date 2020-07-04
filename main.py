@@ -34,7 +34,7 @@ def copyStateDict(state_dict):
 		new_state_dict[name] = v
 	return new_state_dict
 
-parser = argparse.ArgumentParser(description='Generate text bboxes given a video file')
+parser = argparse.ArgumentParser(description='Generate subtitle from video file and translated')
 parser.add_argument('--video', default='', type=str, help='video file')
 parser.add_argument('--language', default='zh-cn', type=str, help='language to translate to')
 parser.add_argument('--out', default='', type=str, help='output srt file')
