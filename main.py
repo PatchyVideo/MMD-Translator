@@ -371,7 +371,10 @@ def detect_changes(last_frame, cur_frame, last_frame_bboxes, cur_frame_bboxes, s
 				last_frame_box_img = clahe.apply(cv2.cvtColor(last_frame_box_img, cv2.COLOR_RGB2GRAY))
 				cur_frame_box_img = clahe.apply(cv2.cvtColor(cur_frame_box_img, cv2.COLOR_RGB2GRAY))
 				# compute SSIM
-				v = metrics.structural_similarity(last_frame_box_img, cur_frame_box_img)
+				try :
+					v = metrics.structural_similarity(last_frame_box_img, cur_frame_box_img)
+				except :
+					continue
 				if v < ssim_threshold :
 					# cv2.imshow('img1', last_frame_box_img)
 					# cv2.imshow('img2', cur_frame_box_img)
