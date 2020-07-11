@@ -10,7 +10,6 @@ import cv2
 import imgproc
 import craft_utils
 
-from craft import CRAFT
 from ocr_ctc import OCR
 
 from scipy.optimize import linear_sum_assignment
@@ -39,9 +38,9 @@ parser.add_argument('--video', default='', type=str, help='video file')
 parser.add_argument('--language', default='zh-cn', type=str, help='language to translate to')
 parser.add_argument('--out', default='', type=str, help='output srt file')
 parser.add_argument('--out_translated', default='', type=str, help='output translated srt file')
-parser.add_argument('--text_threshold', default=0.51, type=float, help='text_threshold')
-parser.add_argument('--link_threshold', default=0.1, type=float, help='link_threshold')
-parser.add_argument('--low_text', default=0.5, type=float, help='low_text')
+parser.add_argument('--text_threshold', default=0.8, type=float, help='text_threshold')
+parser.add_argument('--link_threshold', default=0.2, type=float, help='link_threshold')
+parser.add_argument('--low_text', default=0.4, type=float, help='low_text')
 parser.add_argument('--ssim_threshold', default=0.31, type=float, help='ssim_threshold')
 parser.add_argument('--iou_threshold', default=0.6, type=float, help='iou_threshold')
 parser.add_argument('--levenshtein_threshold', default=0.8, type=float, help='Subtitles above <levenshtein_threshold> are consider the same')
@@ -55,8 +54,6 @@ args = parser.parse_args()
 args.batch_size = 1
 
 print(' -- Creating models')
-model = CRAFT()
-
 clahe = cv2.createCLAHE(clipLimit = 2.0, tileGridSize = (8, 8))
 
 probs = {}
@@ -76,16 +73,16 @@ with open('alphabet.txt', 'r') as fp :
 model_ocr = OCR(alphabet, 0, probs)
 
 print(' -- Loading saved models')
-d = torch.load('textdet_300k.pth')
-model.load_state_dict(d['model'])
+model = torch.jit.load('textdet_100k.pth')
+model = model.cuda()
+model.eval()
 
 d = torch.load('ocr_640k.pth')
 model_ocr.load_state_dict(d['model'])
-
-model = model.cuda()
 model_ocr = model_ocr.cuda()
-model.eval()
 model_ocr.eval()
+
+
 
 print(' -- Loading video')
 
@@ -138,8 +135,8 @@ def merge_bboxes(bboxes) :
 	return merged_boxes
 
 def get_bbox(image_batch, ratio_w, ratio_h) :
-	images_torch = torch.from_numpy(image_batch).cuda().permute(0, 3, 1, 2)
-	with torch.no_grad() :
+	images_torch = torch.from_numpy(image_batch).unsqueeze(0).cuda().permute(0, 3, 1, 2)
+	with torch.no_grad(), torch.jit.optimized_execution(True) :
 		pred = model(images_torch)
 		rs_tensor = pred[:, 0, :, :].cpu().numpy()
 		as_tensor = pred[:, 1, :, :].cpu().numpy()
@@ -488,11 +485,11 @@ while cap.isOpened() :
 	ratio_h = ratio_w = 1 / target_ratio
 	frame_norm = imgproc.normalizeMeanVariance(frame_resized, (0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
 	#frame_norm = imgproc.normalizeMeanVariance(frame_resized)
-	if batch is None :
-		batch = np.empty((args.batch_size, frame_norm.shape[0], frame_norm.shape[1], 3), dtype = np.float32)
-	batch[counter % args.batch_size, :, :, :] = frame_norm
+	# if batch is None :
+	# 	batch = np.empty((args.batch_size, frame_norm.shape[0], frame_norm.shape[1], 3), dtype = np.float32)
+	# batch[counter % args.batch_size, :, :, :] = frame_norm
 	counter += 1
-	bboxes = get_bbox(batch, ratio_w, ratio_h)
+	bboxes = get_bbox(frame_norm, ratio_w, ratio_h)
 	all_frame_bboxes.append(bboxes)
 	texts = last_texts
 	if counter == 1 :
