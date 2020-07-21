@@ -1,7 +1,7 @@
 # PYTHON VERSION DEPRECATED
 Python version is now deprecated, please use C++ version from [Release](https://github.com/PatchyVideo/MMD-Translator/releases/tag/v0.5)
 # Touhou MMD Subtitle Generator v0.3
-Created by [PatchyVideo](thvideo.tv)\
+Created by [PatchyVideo](https://thvideo.tv)\
 Based on [CRAFT](https://arxiv.org/pdf/1904.01941.pdf) scene text detector\
 Translation is done using [Google Translate](https://translate.google.com/) with python package [googletrans](https://github.com/ssut/py-googletrans)
 # Screenshots
@@ -25,4 +25,4 @@ Use `--language` to specifiy which language you want to translate to, list of la
 1. The current text detector is not very accurate, new model is being trained as you are reading this
 1. Support Korean
 1. Build multithreaded C++ version to fully utilized both CPU and GPU
-1. Integrate into [PatchyVideo](thvideo.tv) so people can use it online to enjoy Touhou videos made by people speaking another language
+1. Integrate into [PatchyVideo](https://thvideo.tv) so people can use it online to enjoy Touhou videos made by people speaking another language
