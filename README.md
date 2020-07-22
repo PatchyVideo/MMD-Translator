@@ -1,5 +1,5 @@
 # PYTHON VERSION DEPRECATED
-Python version is now deprecated, please use C++ version from [Release](https://github.com/PatchyVideo/MMD-Translator/releases/tag/v0.5)
+Python version is now deprecated, please use C++ version from [Release](https://github.com/PatchyVideo/MMD-Translator/releases)
 # Touhou MMD Subtitle Generator v0.3
 Created by [PatchyVideo](https://thvideo.tv)\
 Based on [CRAFT](https://arxiv.org/pdf/1904.01941.pdf) scene text detector\
