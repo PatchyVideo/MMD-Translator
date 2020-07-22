@@ -244,14 +244,19 @@ std::vector<BBox> MergeBBoxes(std::vector<BBox> const& detects)
 				unite(i, j);
 		}
 
-	// final path compression
-	for (std::uint32_t i(0); i < num_detects; ++i)
+	bool compression(true);
+	while (compression)
 	{
-		auto root(i);
-		while (parents[root] != parents[parents[root]])
+		compression = false;
+		for (std::uint32_t i(0); i < num_detects; ++i)
 		{
-			parents[root] = parents[parents[root]];
-			root = parents[root];
+			auto root(i);
+			while (parents[root] != parents[parents[root]])
+			{
+				parents[root] = parents[parents[root]];
+				root = parents[root];
+				compression = true;
+			}
 		}
 	}
 
@@ -1548,7 +1553,7 @@ int main(int argc, char** argv) try {
 		{
 			// calculate L1 dist
 			auto diff(ImageL1Distance(last_frame, current_frame));
-			if (diff > 1e-3f)
+			if (diff > 2e-4f)
 				frame_changed = true;
 			//std::cout << "diff=" << diff << "\n";
 		}
