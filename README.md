@@ -1,5 +1,7 @@
 # PYTHON VERSION DEPRECATED
 Python version is now deprecated, please use C++ version from [Release](https://github.com/PatchyVideo/MMD-Translator/releases)
+# Update 2021-07-30
+Added two missing DLL files.
 # Update 2021-07-29
 [New release](https://github.com/PatchyVideo/MMD-Translator/releases/tag/v0.5.2) now added support for RTX 3000 series cards
 # Touhou MMD Subtitle Generator v0.3
